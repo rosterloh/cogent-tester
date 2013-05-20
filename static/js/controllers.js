@@ -1,22 +1,31 @@
 
-app.controller('AppCtrl', function ($scope) {
+app.controller('AppCtrl', function ($scope, socket) {
+    $scope.state = 'Stopped';
+    $scope.relays = []; 
+    $scope.timers = [];
+    $scope.count = [];
+    for (i=0; i<8; i++) {
+        $scope.relays[i] = { index: i, timeout: 5, repetitions: 1000, duty: 50, state: 'Stopped' };
+        $scope.count[i] = 1000;
+    }    
     
-    $scope.state = "Stopped"; 
-    $scope.timeout = 5;
-    $scope.repetitions = 1000;    
-    $scope.count = $scope.repetitions;
-    
-    $scope.startController = function () {
+    $scope.startController = function (num) {
+        $scope.relays[num].state = "Running";
         $scope.state = "Running";
-        $scope.count = $scope.repetitions;
-        $scope.timer = setInterval(function() {
-            $scope.count--;
+        $scope.count[num] = $scope.relays[num].repetitions;
+        $scope.timers[num] = setInterval(function() {
+            socket.emit("relay", {gpio:num, time:$scope.relays[num].timeout, duty:$scope.relays[num].duty});
+            $scope.count[num]--;
             $scope.$apply();
-        }, $scope.timeout*1000);
+        }, $scope.relays[num].timeout*1000);
     };
 
-    $scope.stopController = function () {
-        $scope.state = "Stopped";
-        clearInterval($scope.timer);
+    $scope.stopController = function (num) {
+        $scope.relays[num].state = "Stopped";
+        clearInterval($scope.timers[num]);
+        if($scope.relays.indexOf('Running') > -1)
+            $scope.state = 'Running';
+        else
+            $scope.state = 'Stopped';
     };
 });

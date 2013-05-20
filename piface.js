@@ -39,7 +39,7 @@ var PIN_TYPE = {
 var PIN_TO_BITMASK = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80];
 
 var PiFace = exports.PiFace = function() {
-    this.spi =  new spi.Spi('/dev/spidev0.1', {
+    this.spi =  new spi.Spi('/dev/spidev0.0', {
                                 'mode': spi.MODE['MODE_0']
                             });
 };

@@ -24,28 +24,34 @@
             <header>
                 <h3>Controller State: {{state}}</h3>
             </header>
-            <div class="row">
+            <div class="row" ng-repeat="relay in relays">
+                <div class="span1">{{relay.index}}</div>
                 <div class="span3">
                     Number of repetitions:
                     <br />
-                    <input ng-model="repetitions" type="text" placeholder="1000">
+                    <input ng-model="relay.repetitions" type="text" placeholder="1000">
                 </div>
                 <div class="span3">
                     Switching timeout:
                     <br />
-                    <input ng-model="timeout" type="text" placeholder="3">
+                    <input ng-model="relay.timeout" type="text" placeholder="3">
                 </div>
-                <div class="span6">
-                    <button id="start" class="btn btn-primary" type="button" 
-                        ng-disabled="state === 'Running'" 
-                        ng-click="startController()">Start</button>
-                    <button id="stop" class="btn btn-primary" type="button" 
-                        ng-disabled="state === 'Stopped'" 
-                        ng-click="stopController()">Stop</button>
+                <div class="span3">
+                    Duty Cycle (%):
+                    <br />
+                    <input ng-model="relay.duty" type="text" placeholder="50">
                 </div>
+                <div class="span2">
+                    <button class="btn btn-primary" type="button" 
+                        ng-disabled="relay.state === 'Running'" 
+                        ng-click="startController(relay.index)">Start</button>
+                    <button class="btn btn-primary" type="button" 
+                        ng-disabled="relay.state === 'Stopped'" 
+                        ng-click="stopController(relay.index)">Stop</button>
+                </div>
+                <div ng-show="relay.state === 'Running'"><h1>{{count[relay.index]}}</h1></div>
             </div>
         </div>
-        <div ng-show="state === 'Running'"><h1>{{count}}</h1></div>
     </div>
 
     <div id="footer">
@@ -63,6 +69,7 @@
             </div>
         </div>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
 
     <script src="js/angular.js"></script>
     <script src="js/ui-bootstrap-tpls-0.3.0.min.js"></script>
