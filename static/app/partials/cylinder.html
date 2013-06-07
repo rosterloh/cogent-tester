@@ -1,0 +1,30 @@
+<div class="main" ng-animate="{show: 'fade-show', hide: 'fade-hide'}">
+    <div class="container" style="padding-top: 100px">
+        <header>
+            <h1>2 way valve control</h1>
+            <h3>Controller State: {{state}}</h3>
+            <h3>Cylinder State: {{cylinder.state}}</h3>
+        </header>
+        <div class="row">
+            <div class="span3">
+                Number of repetitions:
+                <br />
+                <input ng-model="cylinder.repetitions" type="text" placeholder="1000">
+            </div>
+            <div class="span3">
+                Cycle Time (s):
+                <br />
+                <input ng-model="cylinder.timeout" type="text" placeholder="3">
+            </div>
+            <div class="span2 btn-group">
+                <button class="btn btn-primary" type="button" 
+                    ng-disabled="state === 'Running'" 
+                    ng-click="startController()">Start</button>
+                <button class="btn btn-primary" type="button" 
+                    ng-disabled="state === 'Stopped'" 
+                    ng-click="stopController()">Stop</button>
+            </div>
+            <div ng-show="state === 'Running'"><h1>{{count}}</h1></div>
+        </div>
+    </div>
+</div>

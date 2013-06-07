@@ -1,4 +1,16 @@
-﻿//This handles retrieving data and is used by controllers. 3 options (server, factory, provider) with 
+// to share data between controllers the easiest way is using a factory
+app.factory('Data', function () {
+    return {message: "I'm data from a service"};
+});
+
+// you can also write filters which can be applied with the {{data.message | filter}} syntax
+app.filter('reverse', function () {
+    return function (text) {
+        return text.split("").reverse().join("");
+    };
+});
+
+//This handles retrieving data and is used by controllers. 3 options (server, factory, provider) with 
 //each doing the same thing just structuring the functions/data differently.
 app.service('customersService', function () {
     this.getCustomers = function () {

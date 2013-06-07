@@ -3,9 +3,8 @@
 <head>
     <title>Cogent App</title>
     <meta name="description" content="App to control relay outputs on raspberry pi">
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet" />
-    <link href="css/styles.css" rel="stylesheet" />
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet" /> -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -15,44 +14,15 @@
                 <a class="brand " href="#/">
                     <img src="img/logo.png" alt="logo"> Cogent Test Controller
                 </a>
+                <ul class="nav nav-pills" ng-controller="NavbarCtrl">
+                    <li ng-class="{'active':getClass('/outputs')}"><a href="#/outputs">Outputs</a></li>
+                    <li ng-class="{'active':getClass('/cylinder')}"><a href="#/cylinder">Cylinder</a></li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="main" ng-controller="AppCtrl">
-        <div class="container" style="padding-top: 100px">
-            <header>
-                <h3>Controller State: {{state}}</h3>
-            </header>
-            <div class="row" ng-repeat="relay in relays">
-                <div class="span1">{{relay.index}}</div>
-                <div class="span3">
-                    Number of repetitions:
-                    <br />
-                    <input ng-model="relay.repetitions" type="text" placeholder="1000">
-                </div>
-                <div class="span3">
-                    Switching timeout:
-                    <br />
-                    <input ng-model="relay.timeout" type="text" placeholder="3">
-                </div>
-                <div class="span3">
-                    Duty Cycle (%):
-                    <br />
-                    <input ng-model="relay.duty" type="text" placeholder="50">
-                </div>
-                <div class="span2">
-                    <button class="btn btn-primary" type="button" 
-                        ng-disabled="relay.state === 'Running'" 
-                        ng-click="startController(relay.index)">Start</button>
-                    <button class="btn btn-primary" type="button" 
-                        ng-disabled="relay.state === 'Stopped'" 
-                        ng-click="stopController(relay.index)">Stop</button>
-                </div>
-                <div ng-show="relay.state === 'Running'"><h1>{{count[relay.index]}}</h1></div>
-            </div>
-        </div>
-    </div>
+    <div ng-view></div>
 
     <div id="footer">
         <div class="navbar navbar-fixed-bottom">
@@ -71,13 +41,13 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
 
-    <script src="js/angular.js"></script>
+    <!-- <script src="js/angular.min.js"></script> -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
     <script src="js/ui-bootstrap-tpls-0.3.0.min.js"></script>
 
     <!-- App libs -->
-    <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <!-- <script src="js/service.js"></script>
-    <script src="js/animatedView.js"></script> -->
+    <script src="app/app.js"></script>
+    <script src="app/controllers.js"></script>
+    <!-- <script src="js/service.js"></script> -->
 </body>
 </html>
