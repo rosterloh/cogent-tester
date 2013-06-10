@@ -57,7 +57,7 @@ function pulse(num, time, duty) {
             gpio_ctrl('write', (200+num).toString(), '1');    
             setTimeout(function() {
                 gpio_ctrl('write', (200+num).toString(), '0');
-            }, (time*1000)*(duty/100));
+            }, time*(duty/100));
             return true;
         }
     }

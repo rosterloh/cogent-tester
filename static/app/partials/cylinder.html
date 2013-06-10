@@ -6,17 +6,48 @@
             <h3>Cylinder State: {{cylinder.state}}</h3>
         </header>
         <div class="row">
-            <div class="span3">
+            <div class="span4">
+                Forward Cylinder:
+                <br />
+                <select ng-model="out1" ng-options="out.name for out in outputs"></select><br>
+            </div>
+            <div class="span4">
+                Backwards Cylinder:
+                <br />
+                <select ng-model="out2" ng-options="out.name for out in outputs"></select><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                Step 1 Time (ms):
+                <br />
+                <input ng-model="cylinder.step1" type="text" placeholder="3000">ms
+            </div>
+            <div class="span4">
+                Step 2 Time (ms):
+                <br />
+                <input ng-model="cylinder.step2" type="text" placeholder="20000">ms
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
+                Step 3 Time (ms):
+                <br />
+                <input ng-model="cylinder.step3" type="text" placeholder="6000">ms
+            </div>
+            <div class="span4">
+                Step 4 Time (ms):
+                <br />
+                <input ng-model="cylinder.step4" type="text" placeholder="1000">ms
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
                 Number of repetitions:
                 <br />
                 <input ng-model="cylinder.repetitions" type="text" placeholder="1000">
             </div>
-            <div class="span3">
-                Cycle Time (s):
-                <br />
-                <input ng-model="cylinder.timeout" type="text" placeholder="3">
-            </div>
-            <div class="span2 btn-group">
+            <div class="span4 btn-group">
                 <button class="btn btn-primary" type="button" 
                     ng-disabled="state === 'Running'" 
                     ng-click="startController()">Start</button>
