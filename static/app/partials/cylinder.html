@@ -2,8 +2,9 @@
     <div class="container" style="padding-top: 100px">
         <header>
             <h1>2 way valve control</h1>
-            <h3>Controller State: {{state}}</h3>
-            <h3>Cylinder State: {{cylinder.state}}</h3>
+            <h3>Server State: <span ng-style="server === 'Connected' ? {color:'green'} : {color:'red'}">{{server}}</span></h3>
+            <h3>Controller State: {{cylinder.controllerState}}</h3>
+            <h3>Cylinder State: {{cylinder.cylinderState}}</h3>
         </header>
         <div class="row">
             <div class="span4">
@@ -21,41 +22,41 @@
             <div class="span4">
                 Step 1 Time (ms):
                 <br />
-                <input ng-model="cylinder.step1" type="text" placeholder="3000">ms
+                <input ng-model="cylinder.step1" type="text">ms
             </div>
             <div class="span4">
                 Step 2 Time (ms):
                 <br />
-                <input ng-model="cylinder.step2" type="text" placeholder="20000">ms
+                <input ng-model="cylinder.step2" type="text">ms
             </div>
         </div>
         <div class="row">
             <div class="span4">
                 Step 3 Time (ms):
                 <br />
-                <input ng-model="cylinder.step3" type="text" placeholder="6000">ms
+                <input ng-model="cylinder.step3" type="text">ms
             </div>
             <div class="span4">
                 Step 4 Time (ms):
                 <br />
-                <input ng-model="cylinder.step4" type="text" placeholder="1000">ms
+                <input ng-model="cylinder.step4" type="text">ms
             </div>
         </div>
         <div class="row">
             <div class="span4">
                 Number of repetitions:
                 <br />
-                <input ng-model="cylinder.repetitions" type="text" placeholder="1000">
+                <input ng-model="cylinder.repetitions" type="text">
             </div>
             <div class="span4 btn-group">
                 <button class="btn btn-primary" type="button" 
-                    ng-disabled="state === 'Running'" 
+                    ng-disabled="cylinder.controllerState === 'Running'" 
                     ng-click="startController()">Start</button>
                 <button class="btn btn-primary" type="button" 
-                    ng-disabled="state === 'Stopped'" 
+                    ng-disabled="cylinder.controllerState === 'Stopped'" 
                     ng-click="stopController()">Stop</button>
             </div>
-            <div ng-show="state === 'Running'"><h1>{{count}}</h1></div>
+            <div ng-show="cylinder.controllerState === 'Running'"><h1>{{cylinder.count}}</h1></div>
         </div>
     </div>
 </div>

@@ -1,4 +1,5 @@
-var express = require('express')
+var express = require('express'),
+    logger = require('./logger');
 
 var app = express();
 var server = app.listen(3000);
@@ -6,7 +7,7 @@ var io = require('socket.io').listen(server)
     , handlers = require('./handlers.js');
 
 io.set('log level', 1);
-console.log("socket started ...");
+logger.info("socket started ...");
 io.sockets.on("connection", handlers.handleSocket );
 
 app.configure(function(){
@@ -22,4 +23,4 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-console.log("Express server listening on port 3000");
+logger.info("Express server listening on port 3000");

@@ -37,9 +37,19 @@ app.controller('OutputCtrl', function ($scope, socket) {
 });
 
 app.controller('CylinderCtrl', function ($scope, socket) {
-    $scope.cylinder = {step1: 3000, step2: 20000, step3: 6000, step4: 1000, repetitions: 1000, state: 'IN'};
-    $scope.state = 'Stopped';
-    $scope.count = 0;
+
+    $scope.cylinder = {
+        step1: 6000, 
+        step2: 20000, 
+        step3: 3000, 
+        step4: 1000, 
+        out1: 0,
+        out2: 1,
+        repetitions: 1000,
+        count: 0,
+        cylinderState: 'IN',
+        controllerState: 'Stopped'
+    };
     $scope.outputs = [
         {name:"Output 0", value:0},
         {name:"Output 1", value:1},
@@ -53,53 +63,44 @@ app.controller('CylinderCtrl', function ($scope, socket) {
     $scope.out1 = $scope.outputs[0];
     $scope.out2 = $scope.outputs[1];
     
-    $scope.doCycle = function () {
-        console.log($scope.out1.name + " OUT for " + $scope.cylinder.step1 + " milliseconds");
-        socket.emit("relay", {gpio:$scope.out1.value, time:$scope.cylinder.step1, duty:10});
-        $scope.cylinder.state = "OUT";
-        //$scope.$apply();
-        setTimeout(function() {
-            console.log($scope.out2.name + " IN for " + $scope.cylinder.step2 + " milliseconds");
-            socket.emit("relay", {gpio:$scope.out2.value, time:$scope.cylinder.step2, duty:10});
-            $scope.cylinder.state = "IN";
-            $scope.$apply();
-            setTimeout(function() {
-                console.log($scope.out1.name + " OUT for " + $scope.cylinder.step3 + " milliseconds");
-                socket.emit("relay", {gpio:$scope.out1.value, time:$scope.cylinder.step3, duty:10});
-                $scope.cylinder.state = "OUT";
-                $scope.$apply();
-                setTimeout(function() {
-                    console.log($scope.out2.name + " IN for " + $scope.cylinder.step4 + " milliseconds");
-                    socket.emit("relay", {gpio:$scope.out2.value, time:$scope.cylinder.step4, duty:10});
-                    $scope.cylinder.state = "IN";
-                    $scope.$apply();
-                    setTimeout(function() {}, $scope.cylinder.step4);
-                }, $scope.cylinder.step3);
-            }, $scope.cylinder.step2);
-        }, $scope.cylinder.step1);
-    };
+    // handle incoming change events
+    socket.on('connect', function() {
+        console.log('Server connected.');
+        $scope.server = "Connected";
+        // Get current data
+        socket.emit("request-values");
+    });
     
+    socket.on('disconnect', function () {
+        console.log('Server disconnected.');
+        $scope.server = "Disconnected";
+    });
+    
+    // Handle status updates
+    socket.on("state-changed", function(data) {
+        console.log('New data recevied: '+data);
+        $scope.cylinder = data;
+        $scope.out1 = $scope.outputs[data.out1];
+        $scope.out2 = $scope.outputs[data.out2];
+    });
+    
+    socket.on("ok", function(data) {
+        console.log('Got OK '+data);
+    });
+    
+    socket.on("error", function(data) {
+        console.log('Error received '+data);
+    });
+
     $scope.startController = function () {
-        $scope.state = "Running";
-        $scope.count = $scope.cylinder.repetitions;
-        var ms = parseInt($scope.cylinder.step1) + parseInt($scope.cylinder.step2) + parseInt($scope.cylinder.step3) + parseInt($scope.cylinder.step4);
-        console.log("Starting cycle timer of " + ms + " ms");
-        $scope.doCycle();
-        $scope.timer = setInterval(function() {
-            $scope.count--;
-            if ($scope.count > 0) {
-                $scope.doCycle();
-            } else {
-                console.log("Test done. Stopping controller");
-                $scope.stopController();
-                $scope.$apply();
-            }
-        }, ms);
+        $scope.cylinder.out1 = $scope.out1.value;
+        $scope.cylinder.out2 = $scope.out2.value;
+        // Start the test sending updated data
+        socket.emit('start', $scope.cylinder);
     };
     
     $scope.stopController = function () {
-        $scope.state = "Stopped";
-        clearInterval($scope.timer);
+        socket.emit('stop');
     };
 });
 
